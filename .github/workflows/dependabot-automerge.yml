@@ -25,7 +25,7 @@ jobs:
           startsWith(steps.meta.outputs.update-type, 'version-update:semver-patch') ||
           startsWith(steps.meta.outputs.update-type, 'version-update:semver-minor') ||
           steps.meta.outputs.update-type == 'security-update'
-        uses: peter-evans/enable-pull-request-automerge@v2
+        uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ github.event.pull_request.number }}
