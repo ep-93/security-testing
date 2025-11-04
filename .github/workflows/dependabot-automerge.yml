@@ -17,7 +17,6 @@ jobs:
         id: meta
         uses: dependabot/fetch-metadata@v2
         with:
-          # default is GITHUB_TOKEN; works for basic metadata
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Enable Auto-merge only for patch/minor (tweak to taste)
@@ -28,6 +27,6 @@ jobs:
           steps.meta.outputs.update-type == 'security-update'
         uses: peter-evans/enable-pull-request-automerge@v2
         with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            pull-request-number: ${{ github.event.pull_request.number }}
-            merge-method: SQUASH
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: SQUASH
