@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Python (pip/requirements.txt, pipenv, poetry are all supported)
+  - package-ecosystem: "pip"
+    directory: "/"            # where your requirements.txt lives
+    schedule:
+      interval: "daily"       # or "weekly"
+    labels: ["dependencies"]
+    open-pull-requests-limit: 10
+    # Optional: group non-breaking bumps to cut PR noise
+    groups:
+      py-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # Keep GitHub Actions up to date too
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "gh-actions"]

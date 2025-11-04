@@ -1,0 +1,32 @@
+name: "Dependabot: enable auto-merge"
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  automerge:
+    # Only run for Dependabot PRs
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          # default is GITHUB_TOKEN; works for basic metadata
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Enable Auto-merge only for patch/minor (tweak to taste)
+      - name: Enable auto-merge (squash) for safe updates
+        if: |
+          startsWith(steps.meta.outputs.update-type, 'version-update:semver-patch') ||
+          startsWith(steps.meta.outputs.update-type, 'version-update:semver-minor') ||
+          steps.meta.outputs.update-type == 'security-update'
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          merge_method: squash
+          # uses GITHUB_TOKEN by default
