@@ -1,0 +1,20 @@
+name: "Manually trigger Dependabot updates"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      # This calls the official Dependabot Update job that GitHub exposes.
+      - name: Trigger Dependabot update
+        uses: dependabot/trigger-update@v1
+        with:
+          # Run updates for all ecosystems defined in dependabot.yml
+          # Or specify ecosystem: 'pip', directory: '/'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
