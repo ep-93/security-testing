@@ -28,5 +28,6 @@ jobs:
           steps.meta.outputs.update-type == 'security-update'
         uses: peter-evans/enable-pull-request-automerge@v2
         with:
-          merge_method: squash
-          # uses GITHUB_TOKEN by default
+            token: ${{ secrets.GITHUB_TOKEN }}
+            pull-request-number: ${{ github.event.pull_request.number }}
+            merge-method: SQUASH
