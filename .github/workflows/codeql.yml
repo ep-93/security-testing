@@ -10,7 +10,8 @@ permissions:
   security-events: write
 
 jobs:
-  analyze:
+  # === Existing Python analysis (unchanged) ===
+  analyze-python:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,7 +24,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # use security-extended to increase number of checks (optional)
+          # Broader ruleset is nice for demos
           queries: security-extended
 
       - name: Autobuild (optional for Python; harmless)
@@ -33,3 +34,16 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "security"
+
+  analyze-iac:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # This community action builds a CodeQL DB for IaC (Terraform) and uploads findings
+      - name: Initialize and Analyze IaC (Terraform)
+        uses: advanced-security/codeql-extractor-iac@v0.5.1
