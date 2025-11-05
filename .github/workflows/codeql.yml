@@ -1,5 +1,6 @@
 # .github/workflows/codeql.yml
 name: "CodeQL"
+
 on:
   push:
     branches: ["main"]
@@ -14,15 +15,23 @@ jobs:
   analyze-python:
     runs-on: ubuntu-latest
     strategy:
-      matrix: { language: ["python"] }
+      matrix:
+        language: ["python"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL (Python)
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
-      - uses: github/codeql-action/autobuild@v3
-      - uses: github/codeql-action/analyze@v3
+
+      - name: Autobuild (Python)
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Analyze (Python)
+        uses: github/codeql-action/analyze@v3
         with:
           category: "security"
 
@@ -32,6 +41,11 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Initialize and Analyze IaC (Terraform)
-        uses: advanced-security/codeql-extractor-iac@v0.5.1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run IaC CodeQL extractor (Terraform)
+        uses: advanced-security/codeql-extractor-action@v0.1.5
+        with:
+          extractor: advanced-security/codeql-extractor-iac@v0.4.6
+          languages: iac
