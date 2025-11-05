@@ -17,7 +17,7 @@ provider "aws" {
 # - Public access block disabled
 # - No default server-side encryption
 resource "aws_s3_bucket" "public_bucket" {
-  bucket        = "codeql-demo-public-bucket-example-12345"
+  bucket        = "codeql-demo-public-bucket-example-23"
   acl           = "public-read"                # ❌ public ACL
   force_destroy = true
   # ❌ no server_side_encryption_configuration block
@@ -28,7 +28,7 @@ resource "aws_s3_bucket_public_access_block" "public_access_off" {
   bucket                  = aws_s3_bucket.public_bucket.id
   block_public_acls       = false              # ❌ allow public ACLs
   block_public_policy     = false              # ❌ allow public policies
-  ignore_public_acls      = false
+  ignore_public_acls      = true
   restrict_public_buckets = false              # ❌ do not restrict
 }
 
@@ -43,7 +43,7 @@ resource "aws_security_group" "open_sg" {
 
   # ❌ SSH open to the world
   ingress {
-    description = "SSH from anywhere"
+    description = "SSH from anywhere super secure."
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -52,9 +52,9 @@ resource "aws_security_group" "open_sg" {
 
   # ❌ All TCP ports open to the world
   ingress {
-    description = "All TCP"
+    description = "All TCP everywhere"
     from_port   = 0
-    to_port     = 65535
+    to_port     = 65534
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -71,7 +71,7 @@ resource "aws_security_group" "open_sg" {
 # Issues CodeQL can flag:
 # - Wildcard actions and resources ("*")
 resource "aws_iam_policy" "wildcard_policy" {
-  name   = "codeql-demo-wildcard-policy"
+  name   = "codeql-demo-wildcard-policy-not-real"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -93,8 +93,8 @@ resource "aws_db_instance" "insecure_db" {
   engine                     = "postgres"
   instance_class             = "db.t3.micro"
   username                   = "postgres"
-  password                   = "P@ssw0rd123!"  # ❌ hard-coded secret (also commonly flagged)
-  allocated_storage          = 20
+  password                   = "P@ssw0rd12!"  # ❌ hard-coded secret (also commonly flagged)
+  allocated_storage          = 25
   publicly_accessible        = true            # ❌ public DB
   storage_encrypted          = false           # ❌ no encryption
   deletion_protection        = false           # ❌ easy to destroy
@@ -107,7 +107,7 @@ resource "aws_db_instance" "insecure_db" {
 # - EBS volume without encryption
 resource "aws_ebs_volume" "unencrypted" {
   availability_zone = "eu-west-2"
-  size              = 10
+  size              = 11
   encrypted         = false                    # ❌ not encrypted
   # ❌ no kms_key_id
 }
