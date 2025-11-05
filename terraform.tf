@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-west-2"
 }
 
 # --- 1) Public S3 bucket, no encryption, public access block disabled ---
