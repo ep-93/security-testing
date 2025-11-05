@@ -1,37 +1,28 @@
+# .github/workflows/codeql.yml
 name: "CodeQL"
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
   security-events: write
 
 jobs:
-  # === Existing Python analysis (unchanged) ===
   analyze-python:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        language: [ "python" ]
+      matrix: { language: ["python"] }
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Broader ruleset is nice for demos
           queries: security-extended
-
-      - name: Autobuild (optional for Python; harmless)
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
         with:
           category: "security"
 
@@ -41,9 +32,6 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # This community action builds a CodeQL DB for IaC (Terraform) and uploads findings
+      - uses: actions/checkout@v4
       - name: Initialize and Analyze IaC (Terraform)
         uses: advanced-security/codeql-extractor-iac@v0.5.1
