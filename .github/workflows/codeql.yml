@@ -38,15 +38,23 @@ jobs:
         with:
           category: "security"
 
-  analyze-iac:
-    runs-on: ubuntu-latest
+  analyze:
+    name: Analyze
+    runs-on: "ubuntu-latest"
     permissions:
+      actions: read
       contents: read
       security-events: write
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Terraform / IaC scanning (pin to a tag that still supports Actions)
-      - name: Initialize and Analyze IaC (Terraform)
-        uses: advanced-security/codeql-extractor-iac@v0.5.1
+      - name: Initialize and Analyze IaC
+        id: codeql_iac
+        uses: advanced-security/codeql-extractor-iac@main
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.codeql_iac.outputs.sarif }}
