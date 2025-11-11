@@ -1,2 +1,2 @@
 # security-testing
-A repository created to show CodeQL and auto merging
+A repository created to show CodeQL and auto merging, if it works.
